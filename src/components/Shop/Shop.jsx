@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
-//import { addToDb, deleteShoppingCart, getShoppingCart } from '../../utilities/fakedb';
+import { addToDb, deleteShoppingCart, getShoppingCart } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css';
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([])
+    const { count } = useLoaderData();
+    const itemPerPage = 10;
+    const numberOfPages = Math.ceil(count / itemPerPage);
+
+    const pages = []
+    for (let i =0; i < numberOfPages; i++){
+        pages.push(i)
+        console.log(pages);
+    }
+    /**
+     * Done 1: get the total nubmer of products
+     * TODO 2: numger of items per page dynamic
+     */
 
     useEffect(() => {
         fetch('http://localhost:5000/products')
@@ -81,6 +94,12 @@ const Shop = () => {
                         <button className='btn-proceed'>Review Order</button>
                     </Link>
                 </Cart>
+            </div>
+            <div className='pagination'>
+                {
+                    pages.map(page => <button key = {page}>{page}</button>)
+                }
+
             </div>
         </div>
     );
