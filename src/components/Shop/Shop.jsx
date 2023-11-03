@@ -8,19 +8,27 @@ import { Link, useLoaderData } from 'react-router-dom';
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([])
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemPerPage,setItemsPerPage] = useState(10)
     const { count } = useLoaderData();
-    const itemPerPage = 10;
+
+
     const numberOfPages = Math.ceil(count / itemPerPage);
 
-    const pages = []
-    for (let i =0; i < numberOfPages; i++){
-        pages.push(i)
-        console.log(pages);
-    }
+    // const pages = []
+    // for (let i =0; i < numberOfPages; i++){
+    //     pages.push(i)
+    //     console.log(pages);
+    // }
+    const pages = [...Array(numberOfPages).keys()];
+    
+
+
     /**
      * Done 1: get the total nubmer of products
      * TODO 2: numger of items per page dynamic
      */
+
 
     useEffect(() => {
         fetch('http://localhost:5000/products')
@@ -74,6 +82,13 @@ const Shop = () => {
         deleteShoppingCart();
     }
 
+    const handleItemsPerPage = e => {
+        const val = parseInt(e.target.value)
+        console.log(val);
+        setItemsPerPage(val);
+        setCurrentPage(0);
+    }
+
     return (
         <div className='shop-container'>
             <div className="products-container">
@@ -96,9 +111,23 @@ const Shop = () => {
                 </Cart>
             </div>
             <div className='pagination'>
+                <p>Current page: {currentPage}</p>
                 {
-                    pages.map(page => <button key = {page}>{page}</button>)
+                    pages.map(page => <button
+                        className={currentPage === page && 'selected' } 
+                        onClick={() => setCurrentPage(page)} 
+                        key = {page}
+                        >{page}</button>)
                 }
+                <select name="" id="">
+                    <option value={itemPerPage} onChange={handleItemsPerPage}>10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                
+                </select>
 
             </div>
         </div>
